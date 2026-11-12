@@ -1,7 +1,7 @@
 {
   "schema_version": "1",
   "checked_at": "2026-11-12",
-  "note": "Direct runtime and development tools used by the Phase 0 implementation. Transitive distribution dependencies are pinned in requirements.lock and requirements-dev.lock; entries here make direct capability, license, scope and smoke evidence visible. No AI agent, paper API, benchmark, or third-party research workflow is enabled.",
+  "note": "Phase 0 and Phase 1.1 direct dependencies and integrations actually exercised. Transitive pins live in requirements.lock, requirements-dev.lock, and requirements-agents.lock. Broad discovery candidates remain disabled unless individually reviewed and tested.",
   "dependencies": [
     {
       "id": "fastapi",
@@ -10,12 +10,19 @@
       "license": "MIT",
       "maintenance_evidence": "Official release notes show 0.162.4 released 2026-11-10; checked 2026-11-12.",
       "capability": "Loopback HTTP API and typed request/response validation",
-      "permissions": ["listen on 127.0.0.1:8000 in local compose"],
-      "secrets": ["PostgreSQL URL is supplied through environment; FastAPI has no provider key"],
+      "permissions": [
+        "listen on 127.0.0.1:8000 in local compose"
+      ],
+      "secrets": [
+        "PostgreSQL URL is supplied through environment; FastAPI has no provider key"
+      ],
       "execution_risk": "HTTP server; compose publishes loopback only, API has no remote authentication and must not be exposed publicly",
       "sandbox_policy": "Non-root API container, read-only root, no-new-privileges, dropped capabilities, 1 GiB memory and 1 CPU cap",
       "integration_status": "tested",
-      "evidence": ["tests/test_api.py", "WSL compose healthz and CRUD smoke 2026-11-12"]
+      "evidence": [
+        "tests/test_api.py",
+        "WSL compose healthz and CRUD smoke 2026-11-12"
+      ]
     },
     {
       "id": "pydantic",
@@ -29,7 +36,9 @@
       "execution_risk": "In-process data validation only",
       "sandbox_policy": "No code from payloads is evaluated",
       "integration_status": "tested",
-      "evidence": ["tests/test_api.py input rejection contract"]
+      "evidence": [
+        "tests/test_api.py input rejection contract"
+      ]
     },
     {
       "id": "sqlalchemy",
@@ -38,12 +47,19 @@
       "license": "MIT",
       "maintenance_evidence": "2.1 release line current in package index on 2026-11-12; exact version pinned.",
       "capability": "Replaceable SQLite/PostgreSQL persistence engine and typed ORM models",
-      "permissions": ["read/write configured AI4S database"],
-      "secrets": ["database credentials via AI4S_DATABASE_URL"],
+      "permissions": [
+        "read/write configured AI4S database"
+      ],
+      "secrets": [
+        "database credentials via AI4S_DATABASE_URL"
+      ],
       "execution_risk": "Database access; query values are parameterized/ORM-managed",
       "sandbox_policy": "Only API/worker process receives database URL; never mounted into untrusted code execution",
       "integration_status": "tested",
-      "evidence": ["tests/test_api.py", "PostgreSQL API and registry smoke 2026-11-12"]
+      "evidence": [
+        "tests/test_api.py",
+        "PostgreSQL API and registry smoke 2026-11-12"
+      ]
     },
     {
       "id": "alembic",
@@ -52,12 +68,19 @@
       "license": "MIT",
       "maintenance_evidence": "Official Alembic documentation version 1.20.1 checked 2026-11-12.",
       "capability": "Versioned schema migration",
-      "permissions": ["DDL access to configured AI4S database during migration"],
-      "secrets": ["database credentials via AI4S_DATABASE_URL"],
+      "permissions": [
+        "DDL access to configured AI4S database during migration"
+      ],
+      "secrets": [
+        "database credentials via AI4S_DATABASE_URL"
+      ],
       "execution_risk": "Schema changes; migrations are checked into this repository and run explicitly at API startup",
       "sandbox_policy": "Migration container is non-root and only connects to project database",
       "integration_status": "tested",
-      "evidence": ["tests/test_api.py SQLite migration", "PostgreSQL upgrade revision 0001_research_core 2026-11-12"]
+      "evidence": [
+        "tests/test_api.py SQLite migration",
+        "PostgreSQL upgrade revision 0001_research_core 2026-11-12"
+      ]
     },
     {
       "id": "psycopg",
@@ -66,12 +89,18 @@
       "license": "LGPL-3.0-only",
       "maintenance_evidence": "Current 3.3 release resolved on 2026-11-12; exact version pinned.",
       "capability": "PostgreSQL DB-API driver",
-      "permissions": ["database network access to configured PostgreSQL host"],
-      "secrets": ["database credentials via environment"],
+      "permissions": [
+        "database network access to configured PostgreSQL host"
+      ],
+      "secrets": [
+        "database credentials via environment"
+      ],
       "execution_risk": "Database client; no arbitrary SQL from research prompts",
       "sandbox_policy": "Only control-plane process uses this driver",
       "integration_status": "tested",
-      "evidence": ["PostgreSQL migration, API CRUD, and resource import smoke 2026-11-12"]
+      "evidence": [
+        "PostgreSQL migration, API CRUD, and resource import smoke 2026-11-12"
+      ]
     },
     {
       "id": "uvicorn",
@@ -80,12 +109,16 @@
       "license": "BSD-3-Clause",
       "maintenance_evidence": "Current release resolved 2026-11-12; exact version pinned.",
       "capability": "ASGI server for the local FastAPI service",
-      "permissions": ["bind container port 8000; host mapping is loopback only"],
+      "permissions": [
+        "bind container port 8000; host mapping is loopback only"
+      ],
       "secrets": [],
       "execution_risk": "Network listener",
       "sandbox_policy": "Container network port is published only to host loopback",
       "integration_status": "tested",
-      "evidence": ["WSL compose startup and /healthz smoke 2026-11-12"]
+      "evidence": [
+        "WSL compose startup and /healthz smoke 2026-11-12"
+      ]
     },
     {
       "id": "postgres-official-image",
@@ -94,12 +127,21 @@
       "license": "PostgreSQL License (PostgreSQL server); base-image packages carry their own licenses",
       "maintenance_evidence": "Official image digest resolved and pulled 2026-11-12; major release 16.",
       "capability": "Local PostgreSQL database service",
-      "permissions": ["local database storage volume", "loopback TCP port 54329"],
-      "secrets": ["AI4S_POSTGRES_PASSWORD in ignored .env"],
+      "permissions": [
+        "local database storage volume",
+        "loopback TCP port 54329"
+      ],
+      "secrets": [
+        "AI4S_POSTGRES_PASSWORD in ignored .env"
+      ],
       "execution_risk": "Persistent database container; volume deletion destroys local records",
       "sandbox_policy": "Official image, no agent/paper mounts; no host socket or home/SSH mounts",
       "integration_status": "tested",
-      "evidence": ["docker-compose healthcheck", "pg_isready", "Alembic and API smoke 2026-11-12"]
+      "evidence": [
+        "docker-compose healthcheck",
+        "pg_isready",
+        "Alembic and API smoke 2026-11-12"
+      ]
     },
     {
       "id": "python-official-image",
@@ -108,12 +150,16 @@
       "license": "PSF-2.0 (Python); Debian base packages retain their own licenses",
       "maintenance_evidence": "Official image digest resolved and pulled 2026-11-12.",
       "capability": "Reproducible API container base",
-      "permissions": ["build context limited by .dockerignore"],
+      "permissions": [
+        "build context limited by .dockerignore"
+      ],
       "secrets": [],
       "execution_risk": "Build executes pinned Python package install from lock file",
       "sandbox_policy": "Runtime non-root, no-new-privileges, read-only root and resource limits",
       "integration_status": "tested",
-      "evidence": ["WSL image build and API startup 2026-11-12"]
+      "evidence": [
+        "WSL image build and API startup 2026-11-12"
+      ]
     },
     {
       "id": "pytest",
@@ -122,12 +168,16 @@
       "license": "MIT",
       "maintenance_evidence": "Exact current test runner version installed and pinned 2026-11-12.",
       "capability": "Offline and API contract tests",
-      "permissions": ["execute checked-in test code"],
+      "permissions": [
+        "execute checked-in test code"
+      ],
       "secrets": [],
       "execution_risk": "Test code runs on developer host; tests are repository-owned",
       "sandbox_policy": "No imported third-party skill or prompt scripts are executed",
       "integration_status": "tested",
-      "evidence": ["pytest -q: 9 passed 2026-11-12"]
+      "evidence": [
+        "pytest -q: 9 passed 2026-11-12"
+      ]
     },
     {
       "id": "ruff",
@@ -136,12 +186,16 @@
       "license": "MIT",
       "maintenance_evidence": "Exact current lint/format version installed and pinned 2026-11-12.",
       "capability": "Python lint and formatter",
-      "permissions": ["read checked-in Python files; formatter writes only selected source files"],
+      "permissions": [
+        "read checked-in Python files; formatter writes only selected source files"
+      ],
       "secrets": [],
       "execution_risk": "Local source formatter",
       "sandbox_policy": "No external input is executed",
       "integration_status": "tested",
-      "evidence": ["ruff check and format --check pass 2026-11-12"]
+      "evidence": [
+        "ruff check and format --check pass 2026-11-12"
+      ]
     },
     {
       "id": "mypy",
@@ -150,12 +204,16 @@
       "license": "MIT",
       "maintenance_evidence": "Exact current type checker version installed and pinned 2026-11-12.",
       "capability": "Static checking of application modules",
-      "permissions": ["read checked-in Python files"],
+      "permissions": [
+        "read checked-in Python files"
+      ],
       "secrets": [],
       "execution_risk": "Static analysis only",
       "sandbox_policy": "No external input is executed",
       "integration_status": "tested",
-      "evidence": ["mypy ai4s: success, no issues 2026-11-12"]
+      "evidence": [
+        "mypy ai4s: success, no issues 2026-11-12"
+      ]
     },
     {
       "id": "httpx2",
@@ -164,12 +222,16 @@
       "license": "BSD-3-Clause",
       "maintenance_evidence": "Exact current release resolved on 2026-11-12; used by Starlette TestClient instead of deprecated httpx transport.",
       "capability": "In-process ASGI test client transport",
-      "permissions": ["invoke local test application"],
+      "permissions": [
+        "invoke local test application"
+      ],
       "secrets": [],
       "execution_risk": "Test-only HTTP transport; no listener or external network",
       "sandbox_policy": "Runs only checked-in API tests",
       "integration_status": "tested",
-      "evidence": ["tests/test_api.py"]
+      "evidence": [
+        "tests/test_api.py"
+      ]
     },
     {
       "id": "setuptools-build-backend",
@@ -178,12 +240,16 @@
       "license": "MIT",
       "maintenance_evidence": "Exact build backend pinned 2026-11-12.",
       "capability": "PEP 517 package build/editable install",
-      "permissions": ["read checked-in package metadata and source during build"],
+      "permissions": [
+        "read checked-in package metadata and source during build"
+      ],
       "secrets": [],
       "execution_risk": "Build backend code runs in PEP 517 isolated build environment",
       "sandbox_policy": "No untrusted project plugin or generated build script is used",
       "integration_status": "tested",
-      "evidence": ["pip install --no-deps -e ."]
+      "evidence": [
+        "pip install --no-deps -e ."
+      ]
     },
     {
       "id": "docker-compose-wsl",
@@ -192,12 +258,118 @@
       "license": "Apache-2.0",
       "maintenance_evidence": "Existing user WSL standalone CLI reported version 5.1.0 on 2026-11-12; not installed or modified by this project.",
       "capability": "Local Compose deployment of PostgreSQL and API",
-      "permissions": ["control local WSL Docker engine", "create project network and named database volume"],
-      "secrets": ["reads ignored project .env"],
+      "permissions": [
+        "control local WSL Docker engine",
+        "create project network and named database volume"
+      ],
+      "secrets": [
+        "reads ignored project .env"
+      ],
       "execution_risk": "Container lifecycle and persistent local DB volume",
       "sandbox_policy": "Only project services; ports loopback; no Docker socket mounted into API container",
       "integration_status": "tested",
-      "evidence": ["compose config validation", "build, up, healthcheck, API and PostgreSQL smoke 2026-11-12"]
+      "evidence": [
+        "compose config validation",
+        "build, up, healthcheck, API and PostgreSQL smoke 2026-11-12"
+      ]
+    },
+    {
+      "id": "langgraph",
+      "version": "1.2.21",
+      "source": "https://github.com/langchain-ai/langgraph",
+      "license": "MIT",
+      "maintenance_evidence": "Pinned official PyPI release 1.2.21 installed and exercised on 2026-11-12.",
+      "capability": "Composable node graph and resumable literature workflow; checkpointing delegated to SQLite checkpointer.",
+      "permissions": [
+        "Runs repository-owned graph node functions",
+        "Writes graph checkpoints to configured local SQLite file"
+      ],
+      "secrets": [],
+      "execution_risk": "Graph nodes execute trusted repository code; imported paper metadata is treated as data, never node instructions.",
+      "sandbox_policy": "No arbitrary shell/code node; Crossref egress only through bounded adapter after exact persisted approval; LangSmith tracing disabled.",
+      "integration_status": "tested",
+      "evidence": [
+        "tests/test_phase1_literature.py: checkpoint persistence and resume after tool failure",
+        "docs/PHASE_1_REPORT.md"
+      ]
+    },
+    {
+      "id": "langgraph-checkpoint-sqlite",
+      "version": "3.1.3",
+      "source": "https://github.com/langchain-ai/langgraph",
+      "license": "MIT",
+      "maintenance_evidence": "Pinned official package release installed and exercised on 2026-11-12.",
+      "capability": "Local durable LangGraph checkpoints, separate from business approvals and run records.",
+      "permissions": [
+        "Creates/updates only the explicitly configured checkpoint SQLite file"
+      ],
+      "secrets": [],
+      "execution_risk": "Checkpoint database is trusted local state; deserialization is restricted to no msgpack modules.",
+      "sandbox_policy": "JsonPlusSerializer(allowed_msgpack_modules=()); file path passed by operator; no host mounts or remote DB.",
+      "integration_status": "tested",
+      "evidence": [
+        "tests/test_phase1_literature.py: checkpoint table and failure resume",
+        "docs/PHASE_1_REPORT.md"
+      ]
+    },
+    {
+      "id": "mcp-python-sdk",
+      "version": "2.3.0",
+      "source": "https://github.com/modelcontextprotocol/python-sdk",
+      "license": "MIT",
+      "maintenance_evidence": "Pinned official package release installed and exercised against an in-process MCPServer/Client pair on 2026-11-12.",
+      "capability": "Typed MCP tool contracts and local client/server dispatch for Crossref search and DOI resolution.",
+      "permissions": [
+        "Invokes only two tool names declared in the reviewed skill"
+      ],
+      "secrets": [],
+      "execution_risk": "MCP tool implementation runs repository code; tool errors are surfaced and no arbitrary command tool exists.",
+      "sandbox_policy": "In-process transport; no external MCP endpoint/process, filesystem, shell, or credentials exposed.",
+      "integration_status": "tested",
+      "evidence": [
+        "tests/test_phase1_literature.py: actual SDK client/server tool call",
+        "examples/literature/phase1-smoke/evidence_manifest.json"
+      ]
+    },
+    {
+      "id": "pyyaml",
+      "version": "6.0.3",
+      "source": "https://github.com/yaml/pyyaml",
+      "license": "MIT",
+      "maintenance_evidence": "Pinned package release installed; safe_load used by skill registry; security contract tests passed 2026-11-12.",
+      "capability": "Parse Agent Skills YAML frontmatter without object constructors.",
+      "permissions": [
+        "Reads bounded SKILL.md manifests under configured skills root"
+      ],
+      "secrets": [],
+      "execution_risk": "Untrusted manifests are parsed as plain data; scripts in skills are never imported or executed.",
+      "sandbox_policy": "yaml.safe_load, file count/size limit, symlink rejection, tool/permission/rule allowlists and content SHA.",
+      "integration_status": "tested",
+      "evidence": [
+        "tests/test_phase1_literature.py: unsafe tags and unknown tool rejection",
+        "skills/literature-evidence-review/SKILL.md"
+      ]
+    },
+    {
+      "id": "crossref-rest-api",
+      "version": "public REST API; retrieved 2026-11-12",
+      "source": "https://api.crossref.org/",
+      "license": "Metadata facts generally reusable; abstracts may be copyright controlled and are excluded from requests and retained snapshots.",
+      "maintenance_evidence": "Official API/filter documentation reviewed 2026-11-12; live DOI-filter request returned a Crossref record.",
+      "capability": "Read-only bounded title search and exact DOI-filter metadata resolution.",
+      "permissions": [
+        "HTTPS GET api.crossref.org only",
+        "Search maximum 5 rows",
+        "Exact request/query or DOI requires one-use stored approval"
+      ],
+      "secrets": [],
+      "execution_risk": "External read-only network dependency; title search may return misleading or unrelated records.",
+      "sandbox_policy": "No auth, no mailto identifier, max 1 MiB response, 8s timeout, >=1.05s request spacing persisted in shared ResearchStore SQLite, no retries, selected fields exclude abstract.",
+      "integration_status": "tested",
+      "evidence": [
+        "examples/literature/phase1-smoke/evidence_manifest.json: exact DOI success and title-search failure",
+        "tests/test_phase1_literature.py"
+      ]
     }
   ]
 }

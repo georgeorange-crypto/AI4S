@@ -124,6 +124,6 @@ For the full dataset of 100 + 43 entries see `registries/` and the two prior sur
 6. **Scientific evaluation**: known fixed task, baseline, raw logs and honest limits.
 7. **Enable/monitor**: default off until approved; periodically reverify version, vulnerability, maintenance and feature compatibility.
 
-## Phase 0 current status
+## Phase 0 and Phase 1.1 current status
 
-The FastAPI, Pydantic, SQLAlchemy, Alembic, Psycopg, Uvicorn, official PostgreSQL/Python images, pytest, Ruff, mypy, test transport and WSL Compose runtime actually used are enumerated in `registries/runtime_dependency_audit.json` with source, license, risk, scope and smoke evidence. `GET /api/v1/capabilities` exposes this audited runtime set. The broad 100+43 candidate inventory remains discovery-only. LangGraph, Skills execution, MCP, OpenHands, paper APIs, MLflow and Inspect AI have not been integrated. See `PHASE_0_REPORT.md`.
+The Phase 0 runtime is enumerated in `registries/runtime_dependency_audit.json`. Phase 1.1 now adds tested LangGraph SQLite checkpointing, the MCP Python SDK in-process client/server, a hash-addressed reviewed first-party Agent Skill and a bounded Crossref REST adapter. The Crossref tool requires persisted exact-scope approval; abstracts are excluded. Real smoke evidence and one negative search result are under `examples/literature/phase1-smoke/`; tests remain offline. Semantic Scholar, arXiv, OpenAlex, external MCP servers, model providers, OpenHands, MLflow and Inspect AI are not enabled. Full Phase 1 acceptance (idea selection and sandbox experiment driven by the literature workflow) is still open. See `PHASE_0_REPORT.md` and `PHASE_1_REPORT.md`.

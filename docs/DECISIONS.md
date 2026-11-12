@@ -20,7 +20,7 @@ The first CPU experiment is repository-owned deterministic code against a checke
 
 ## ADR-005 — Fail closed on privileged actions
 
-The offline CLI requires a persisted local approval. Remote execution, external publication, network tools and unknown actions require a matching approval and are not implemented as active adapters. Compose binds API/database ports to loopback; API has no authentication and must not be exposed publicly.
+The offline CLI requires a persisted local approval. Remote execution and external publication require explicit matching approvals and remain unimplemented. Unknown actions are denied. As of Phase 1.1, the only active network adapter is the read-only Crossref metadata adapter; it requires one-use persisted approval bound to an exact query scope or DOI and does not fetch abstracts. Compose binds API/database ports to loopback; API has no authentication and must not be exposed publicly.
 
 ## ADR-006 — WSL Docker is the selected local container environment
 
@@ -39,3 +39,11 @@ These official sources informed adapter boundaries; they do **not** imply instal
 - MLflow Tracking: https://mlflow.org/docs/latest/tracking/
 
 Direct dependencies/images actually used, exact versions, license, source, maintenance evidence, scope, risk and smoke evidence are listed in `registries/runtime_dependency_audit.json`. No candidate from the broad discovery catalog is activated automatically.
+
+## ADR-007 — Model-free Phase 1 literature/tool graph slice
+
+**Decision:** add one bounded Crossref adapter, a reviewed Agent Skills-compatible metadata-only skill, the official MCP Python SDK in-process server/client, and LangGraph with its official SQLite checkpointer. Keep the business run and approvals in `ResearchStore`; graph checkpoints only resume node state. Every network query or exact DOI lookup and skill activation requires a persisted one-use approval before egress. The optional integration is not imported by the offline core workflow.
+
+**Reason:** the user requested tool and graph-workflow acceptance before enabling any model. A deterministic metadata-only graph can validate permissions, tool contracts, provenance, checkpoint recovery and raw artifacts without model keys, GPU, or fabricated research reasoning. Crossref abstracts are excluded at the API request level. The search smoke surfaced title-matched but unrelated posted-content records, so search ranking is treated as untrusted discovery and not citation verification; an exact DOI filter is supported separately. No claim-support inference or automatic idea selection is made.
+
+**Limitations:** only Crossref is wired; Semantic Scholar/arXiv/OpenAlex and external Skills/MCP servers are not enabled. MCP is in-process and local to this adapter, not a general remote MCP connector. No model gateway, idea generation, pause/cancel control for graph nodes, sandboxed code agent, or hypothesis/experiment release workflow has been added. See `docs/PHASE_1_REPORT.md` and `examples/literature/phase1-smoke/evidence_manifest.json`.

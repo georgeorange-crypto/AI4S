@@ -1,4 +1,5 @@
 -r requirements.lock
+-r requirements-agents.lock
 colorama==0.4.6
 httpcore2==2.16.0
 httpx2==2.16.0

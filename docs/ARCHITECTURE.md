@@ -1,5 +1,7 @@
 # AI4S Research OS — Detailed Architecture Design
 
+> Current delivery state (2026-11-12): Phase 0 offline core and Phase 1.1 model-free Crossref/Skills/MCP/LangGraph tool slice are implemented and tested. Complete Phase 1 is still open; see `PHASE_1_REPORT.md`.
+
 ## 0. Context and product scope
 
 - Primary users: an individual or small CS/AI research team running multiple long-term research programs.

@@ -59,6 +59,13 @@ class ResearchStore:
         CREATE TABLE IF NOT EXISTS resource_observations(resource_id TEXT, source_record_id TEXT, source_file TEXT, raw_json TEXT NOT NULL, PRIMARY KEY(resource_id,source_record_id,source_file));
         CREATE TABLE IF NOT EXISTS discoveries(id TEXT PRIMARY KEY, canonical_url TEXT, raw_json TEXT NOT NULL);
         CREATE TABLE IF NOT EXISTS approvals(id TEXT PRIMARY KEY, action TEXT, decision TEXT, actor TEXT, scope TEXT, created_at TEXT);
+        CREATE TABLE IF NOT EXISTS literature_runs(run_key TEXT PRIMARY KEY, thread_id TEXT NOT NULL, query TEXT NOT NULL, status TEXT NOT NULL, approval_id TEXT NOT NULL, skill_name TEXT NOT NULL, skill_sha256 TEXT NOT NULL, started_at TEXT NOT NULL, ended_at TEXT, error TEXT, report_json TEXT);
+        CREATE TABLE IF NOT EXISTS literature_tool_calls(call_id TEXT PRIMARY KEY, run_key TEXT NOT NULL, sequence INTEGER NOT NULL, tool_name TEXT NOT NULL, request_json TEXT NOT NULL, response_json TEXT NOT NULL, response_sha256 TEXT NOT NULL, created_at TEXT NOT NULL, UNIQUE(run_key, sequence));
+        CREATE TABLE IF NOT EXISTS literature_sources(source_id TEXT PRIMARY KEY, provider TEXT NOT NULL, doi TEXT NOT NULL, url TEXT NOT NULL, title TEXT NOT NULL, metadata_json TEXT NOT NULL, license_status TEXT NOT NULL, created_at TEXT NOT NULL);
+        CREATE TABLE IF NOT EXISTS literature_snapshots(snapshot_id TEXT PRIMARY KEY, source_id TEXT NOT NULL, request_url TEXT NOT NULL, response_sha256 TEXT NOT NULL, response_json TEXT NOT NULL, status_code INTEGER NOT NULL, retrieved_at TEXT NOT NULL);
+        CREATE TABLE IF NOT EXISTS literature_evidence(evidence_id TEXT PRIMARY KEY, run_key TEXT NOT NULL, source_id TEXT NOT NULL, claim_text TEXT NOT NULL, status TEXT NOT NULL, location TEXT NOT NULL, created_at TEXT NOT NULL);
+        CREATE TABLE IF NOT EXISTS literature_events(event_id INTEGER PRIMARY KEY AUTOINCREMENT, run_key TEXT NOT NULL, event_type TEXT NOT NULL, payload TEXT NOT NULL, created_at TEXT NOT NULL);
+        CREATE TABLE IF NOT EXISTS network_rate_limits(bucket TEXT PRIMARY KEY, last_started REAL NOT NULL);
         CREATE TABLE IF NOT EXISTS workflows(id TEXT PRIMARY KEY, run_key TEXT UNIQUE, state TEXT, checkpoint TEXT, budget_json TEXT, started_at TEXT, ended_at TEXT, error TEXT);
         CREATE TABLE IF NOT EXISTS events(id INTEGER PRIMARY KEY AUTOINCREMENT, workflow_id TEXT, seq INTEGER, event_type TEXT, payload TEXT, created_at TEXT, UNIQUE(workflow_id, seq));
         CREATE TABLE IF NOT EXISTS experiment_runs(id TEXT PRIMARY KEY, workflow_id TEXT, seed INTEGER, status TEXT, metrics_json TEXT, idempotency_key TEXT UNIQUE, elapsed_seconds REAL, error TEXT);
@@ -69,6 +76,9 @@ class ResearchStore:
         for name in ("started_at", "ended_at"):
             if name not in columns:
                 self.db.execute(f"ALTER TABLE experiment_runs ADD COLUMN {name} TEXT")
+        approval_columns = {row[1] for row in self.db.execute("PRAGMA table_info(approvals)")}
+        if "used_at" not in approval_columns:
+            self.db.execute("ALTER TABLE approvals ADD COLUMN used_at TEXT")
         resource_columns = {row[1] for row in self.db.execute("PRAGMA table_info(resources)")}
         resource_migrations = {
             "maintainer": "TEXT",
@@ -97,7 +107,8 @@ class ResearchStore:
     def approve(self, action: str, actor: str, scope: str) -> str:
         approval_id = str(uuid.uuid4())
         self.db.execute(
-            "INSERT INTO approvals VALUES(?,?,?,?,?,?)", (approval_id, action, "approved", actor, scope, now())
+            "INSERT INTO approvals(id,action,decision,actor,scope,created_at,used_at) VALUES(?,?,?,?,?,?,NULL)",
+            (approval_id, action, "approved", actor, scope, now()),
         )
         self.db.commit()
         return approval_id
@@ -109,6 +120,31 @@ class ResearchStore:
             ).fetchone()
             is not None
         )
+
+    def approval_matches(self, approval_id: str, action: str, scope: str) -> bool:
+        return (
+            self.db.execute(
+                "SELECT 1 FROM approvals WHERE id=? AND action=? AND scope=? AND decision='approved' AND used_at IS NULL",
+                (approval_id, action, scope),
+            ).fetchone()
+            is not None
+        )
+
+    def consume_approvals(self, approvals: list[tuple[str, str, str]]) -> None:
+        """Atomically consume exact-scope, one-use approvals before external actions."""
+        self.db.execute("BEGIN IMMEDIATE")
+        try:
+            for approval_id, action, scope in approvals:
+                cursor = self.db.execute(
+                    "UPDATE approvals SET used_at=? WHERE id=? AND action=? AND scope=? AND decision='approved' AND used_at IS NULL",
+                    (now(), approval_id, action, scope),
+                )
+                if cursor.rowcount != 1:
+                    raise PermissionError(f"missing, mismatched, or already used approval for {action}")
+            self.db.commit()
+        except Exception:
+            self.db.rollback()
+            raise
 
     def create_workflow(self, run_key: str, budget: Budget) -> tuple[str, bool]:
         existing = self.db.execute("SELECT id FROM workflows WHERE run_key=?", (run_key,)).fetchone()

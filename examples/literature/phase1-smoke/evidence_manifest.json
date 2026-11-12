@@ -1,0 +1,143 @@
+{
+  "evidence_scope": "Live read-only Crossref metadata smoke tests through the project CLI, in-process MCP SDK, and LangGraph; abstracts are excluded from selected fields. Not scientific claim validation.",
+  "crossref_smoke_date": "2026-11-12",
+  "all_response_checksums_verified": true,
+  "runs": [
+    {
+      "run_key": "attention-is-all-you-need-20261112",
+      "query": "Attention Is All You Need",
+      "status": "failed",
+      "error": "RuntimeError: MCP tool crossref_resolve returned an error",
+      "skill": "literature-evidence-review",
+      "skill_sha256": "8ce96ba518427e6575c4870f1465c798a827f15ca1b9a1ab2e53e0156f36b80e",
+      "started_at": "2026-11-12T21:33:18.816679+00:00",
+      "ended_at": "2026-11-12T21:33:21.825009+00:00",
+      "model_used": null,
+      "tool_calls": [
+        {
+          "sequence": 1,
+          "tool": "crossref_search",
+          "request": {
+            "max_results": 3,
+            "operation": "search",
+            "query": "Attention Is All You Need"
+          },
+          "retrieved_at": "2026-11-12T21:33:20.601263+00:00",
+          "response_sha256": "72125d5ab1f3d6c9ab87a55dbba3e47776e489671012f35af04ee4645a7ca6c3",
+          "raw_response": "attention-is-all-you-need-20261112/snapshots/72/72125d5ab1f3d6c9ab87a55dbba3e47776e489671012f35af04ee4645a7ca6c3"
+        }
+      ],
+      "report": {
+        "model_used": null,
+        "run_key": "attention-is-all-you-need-20261112"
+      }
+    },
+    {
+      "run_key": "bert-acl-doi-20261112",
+      "query": "doi:10.18653/v1/n19-1423",
+      "status": "failed",
+      "error": "RuntimeError: MCP tool crossref_resolve returned an error",
+      "skill": "literature-evidence-review",
+      "skill_sha256": "8ce96ba518427e6575c4870f1465c798a827f15ca1b9a1ab2e53e0156f36b80e",
+      "started_at": "2026-11-12T21:36:28.680471+00:00",
+      "ended_at": "2026-11-12T21:36:30.184351+00:00",
+      "model_used": null,
+      "tool_calls": [],
+      "report": {
+        "model_used": null,
+        "run_key": "bert-acl-doi-20261112"
+      }
+    },
+    {
+      "run_key": "bert-acl-doi-fixed-20261112",
+      "query": "doi:10.18653/v1/n19-1423",
+      "status": "completed",
+      "error": null,
+      "skill": "literature-evidence-review",
+      "skill_sha256": "8ce96ba518427e6575c4870f1465c798a827f15ca1b9a1ab2e53e0156f36b80e",
+      "started_at": "2026-11-12T21:37:50.415636+00:00",
+      "ended_at": "2026-11-12T21:37:52.048831+00:00",
+      "model_used": null,
+      "tool_calls": [
+        {
+          "sequence": 2,
+          "tool": "crossref_resolve",
+          "request": {
+            "doi": "10.18653/v1/n19-1423",
+            "operation": "resolve"
+          },
+          "retrieved_at": "2026-11-12T21:37:51.832964+00:00",
+          "response_sha256": "3c4fad0e8b1ee4fa96fc7291d1bb6e17e9c8ff70b9f72b369d2c4aa57947b86a",
+          "raw_response": "bert-acl-doi-fixed-20261112/snapshots/3c/3c4fad0e8b1ee4fa96fc7291d1bb6e17e9c8ff70b9f72b369d2c4aa57947b86a"
+        }
+      ],
+      "report": {
+        "approvals": {
+          "crossref": "54e37630-5030-4282-97c1-760a020c37ad",
+          "skill_activation": "07c9e011-57d1-40fb-bc5b-dc210f8b8f5b"
+        },
+        "direct_doi": "10.18653/v1/n19-1423",
+        "interpretation_limit": "Confirms only that Crossref returned metadata and whether the title strings match; it does not establish scientific claim support or correctness.",
+        "max_results": 3,
+        "model_used": null,
+        "query": "doi:10.18653/v1/n19-1423",
+        "resolution": {
+          "candidate": {
+            "doi": "10.18653/v1/n19-1423",
+            "title": null
+          },
+          "evidence": {
+            "doi": "10.18653/v1/n19-1423",
+            "evidence_id": "cef02c9c61a3faa7da88c1082663ce1b",
+            "source_id": "daf94e490e0c5802ba5e0f171f8218ed",
+            "status": "doi_resolved_title_uncompared",
+            "url": "https://doi.org/10.18653/v1/n19-1423"
+          },
+          "record": {
+            "authors": [
+              "Jacob Devlin",
+              "Ming-Wei Chang",
+              "Kenton Lee",
+              "Kristina Toutanova"
+            ],
+            "container_title": "Proceedings of the 2019 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies, Volume 1 (Long and Short Papers)",
+            "doi": "10.18653/v1/n19-1423",
+            "issue": null,
+            "license_urls": [],
+            "page": "4171-4186",
+            "publisher": "Association for Computational Linguistics",
+            "title": "BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding",
+            "type": "proceedings-article",
+            "url": "https://doi.org/10.18653/v1/n19-1423",
+            "volume": null,
+            "year": 2019
+          },
+          "snapshot": {
+            "artifact": {
+              "id": "69418929-1e3c-445d-8e68-6b542eb9f12b",
+              "name": "crossref_resolve_response.json",
+              "path": "examples\\literature\\phase1-smoke\\bert-acl-doi-fixed-20261112\\snapshots\\3c\\3c4fad0e8b1ee4fa96fc7291d1bb6e17e9c8ff70b9f72b369d2c4aa57947b86a",
+              "sha256": "3c4fad0e8b1ee4fa96fc7291d1bb6e17e9c8ff70b9f72b369d2c4aa57947b86a"
+            },
+            "call_id": "07f11d1fe22fa51deb1b164a23311a6c",
+            "response_sha256": "3c4fad0e8b1ee4fa96fc7291d1bb6e17e9c8ff70b9f72b369d2c4aa57947b86a"
+          },
+          "status": "doi_resolved_title_uncompared"
+        },
+        "run_key": "bert-acl-doi-fixed-20261112",
+        "search_results": [],
+        "skill": {
+          "name": "literature-evidence-review",
+          "sha256": "8ce96ba518427e6575c4870f1465c798a827f15ca1b9a1ab2e53e0156f36b80e",
+          "version": "1.0.0"
+        },
+        "status": "doi_resolved_title_uncompared",
+        "thread_id": "117c6021db0aae0e9abc30508e8ca3ff5a328de6c59ac0c03de01cc5cc1a2889",
+        "tools": [
+          "crossref_resolve"
+        ],
+        "workflow": "crossref-metadata-identity-check"
+      }
+    }
+  ]
+}

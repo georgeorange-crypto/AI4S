@@ -1,6 +1,6 @@
 # AI4S Research OS — Architecture & Codex Development Blueprint
 
-**状态：Phase 0 离线内核已实现；外部集成尚未验证**
+**状态：Phase 0 离线内核已实现；Phase 1.1 文献工具/图工作流已实测；完整 Phase 1 尚未验收**
 **日期：2026-11-12**
 **方向：Computer Science / Artificial Intelligence / Machine Learning / AI Systems / Agents / GPU Systems**
 
@@ -31,6 +31,18 @@ CLI 会运行固定 CSV fixture 上的多数类 baseline 与 x1 阈值候选算�
 可使用 `run-offline --pause-after-seed 11` 暂停，再使用 `resume --approval-id <approval-id>` 恢复；`--run-key` 可指定 workflow 的幂等键。必须先由显式 `approve-local` 命令写入本地 approval 记录；失败记录和被争议证据会保留。此批准仅表示本地用户允许该零花费 fixture 实验，不构成远程/发布权限。
 
 资源导入保留 100 项资源记录、43 项发现索引记录和原始字段；按规范 URL 计算实际去重。第三方资源仍为 `discovered`，未知许可证和未审查执行风险默认禁止启用。
+
+### Phase 1.1：模型关闭的文献工具与图工作流
+
+此 slice 使用官方 MCP Python SDK、LangGraph SQLite checkpointer、Crossref REST API 和仓库内 Agent Skill；**不调用任何模型**。离线测试使用 fake HTTP transport，不联网。真实 Crossref smoke 的批准、报告和原始响应 SHA-256 见 `docs/PHASE_1_REPORT.md` 与 `examples/literature/phase1-smoke/evidence_manifest.json`。执行入口示例：
+
+```powershell
+.\.venv\Scripts\python.exe -m ai4s.cli approve-doi --db .ai4s/research.sqlite --doi 10.18653/v1/N19-1423 --actor <your-name>
+.\.venv\Scripts\python.exe -m ai4s.cli approve-skill --db .ai4s/research.sqlite --actor <your-name>
+.\.venv\Scripts\python.exe -m ai4s.cli run-literature-agent --db .ai4s/research.sqlite --out .ai4s/literature --checkpoints .ai4s/agent-checkpoints.sqlite --doi 10.18653/v1/N19-1423 --run-key bert-doi-lookup --crossref-approval-id <approval-id> --skill-approval-id <approval-id>
+```
+
+搜索模式使用 `approve-crossref --query ... --max-results 3`，批准范围绑定规范化查询哈希与结果数。注意：检索仅是发现，标题/DOI 元数据相符不能证明论文结论；当前 slice 不选 Idea、不生成假设、不执行代码。详见 [`docs/PHASE_1_REPORT.md`](docs/PHASE_1_REPORT.md)。
 
 ### WSL Docker 环境（API + PostgreSQL）
 

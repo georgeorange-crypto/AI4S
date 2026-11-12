@@ -26,6 +26,10 @@ P0 is the minimum usable research backbone; P1 is real integration and autonomou
 
 ## Phase 1 — Research Sources, Skills, Agents
 
+### Status update — 2026-11-12
+
+Phase 1.1 delivered a model-free Crossref + Agent Skills + in-process MCP + LangGraph SQLite checkpoint slice. See `PHASE_1_REPORT.md`. The complete Phase 1 acceptance remains open: semantic/arXiv sources, literature-driven idea/hypothesis selection, and an approved experiment handoff are not implemented.
+
 **Deliverables:**
 
 1. Official adapters for Semantic Scholar and arXiv, Crossref DOI verification, optional OpenAlex; recorded HTTP fixtures and rate limiting. Missing credentials gracefully degrade.
