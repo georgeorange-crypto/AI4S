@@ -1,0 +1,29 @@
+schema_version: '1'
+project_id: example-ai-systems
+name: AI Systems Research Program
+domain: ai-systems
+research_topics:
+  - gpu-kernel-optimization
+  - llm-inference
+  - agent-context-compression
+sources:
+  arxiv: { enabled: false }
+  semantic_scholar: { enabled: false }
+  local_fixtures: { enabled: true }
+models:
+  default_provider: disabled-in-offline-demo
+  provider_fallbacks: []
+workflow:
+  initial_mode: human-approved-experiment
+  unattended_network: false
+  max_retries: 2
+budget:
+  llm_spend_usd: 0
+  external_api_requests: 0
+  gpu_hours: 0
+  cpu_minutes: 20
+permissions:
+  allow_publishing: false
+  allow_git_push: false
+  allow_unreviewed_skills: false
+  allow_remote_execution: false

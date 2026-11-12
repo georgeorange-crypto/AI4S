@@ -1,0 +1,13 @@
+.git
+.venv
+.ai4s
+.env
+docs
+examples
+registries
+tests
+scripts
+prompts
+configs
+__pycache__
+*.py[cod]

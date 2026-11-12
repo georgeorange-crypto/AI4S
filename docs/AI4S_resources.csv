@@ -1,0 +1,101 @@
+﻿category,name,organization,url,role,integration_mode,priority,adoption_risk,notes
+01 端到端科研,The AI Scientist v1,Sakana AI,https://github.com/SakanaAI/AI-Scientist,完整科研流水线模板,架构借鉴,P1,特殊 Source Code License；AI 使用披露；运行模型生成的代码需隔离,模板式实验+自动写作
+01 端到端科研,The AI Scientist v2,Sakana AI,https://github.com/SakanaAI/AI-Scientist-v2,探索性研究、树搜索、实验管理,架构借鉴 / 许可审查后试验,P0,特殊 Source Code License；沙箱；论文质量不可默认保证,不同于v1模板，适合开放式搜索
+01 端到端科研,Agent Laboratory,Samuel Schmidgall,https://github.com/SamuelSchmidgall/AgentLaboratory,文献、实验、写作、人类反馈,源码试运行,P0,检查仓库当前许可证与模型依赖,适合可介入的科研阶段
+01 端到端科研,autoresearch,Andrej Karpathy,https://github.com/karpathy/autoresearch,指标驱动实验循环与自动代码迭代,原样跑通后改造,P0,单GPU/单指标/固定时间的适用边界,2026年公开的极简科研Harness范例
+01 端到端科研,AIDE ML,AIcrowd,https://github.com/AIcrowd/aicrowd-aide,代码搜索、实验评测、ML工程优化,实验优化适配器,P0,要防止评价指标过拟合,AI Scientist v2搜索组件有借鉴关系
+01 端到端科研,Robin,FutureHouse,https://github.com/Future-House/robin,科研多智能体工作流,参考 / 局部适配,P1,分析部分依赖 Edison API 和费用,生物医学领域更直接
+01 端到端科研,Google AI Co-Scientist,Google,https://docs.cloud.google.com/gemini/enterprise/docs/co-scientist-and-alphaevolve,Idea生成、反思、排序、演化、综述,架构设计参考,P0,非全部开源；避免宣称可复现其内部实现,六类角色及Supervisor
+01 端到端科研,AlphaEvolve,Google DeepMind,https://deepmind.google/blog/alphaevolve-a-gemini-powered-coding-agent-for-designing-advanced-algorithms/,代码进化搜索+自动评价,方法借鉴,P0,公开的是介绍，非可直接复制内部产品,计算机系统/算法优化适用
+01 端到端科研,ResearchAgent,Microsoft Research / academia,https://aclanthology.org/2025.naacl-long.342/,论文图谱+Idea生成+Reviewer反馈,论文方法借鉴,P1,须单独找代码许可和数据入口,适合创新构思
+01 端到端科研,AgentRxiv,Schmidgall / collaborators,https://arxiv.org/abs/2503.18102,Agent间科研成果共享与复用,研究组织机制参考,P2,不能把智能体生成内容当可靠科研结论,持续科研知识积累
+01 端到端科研,GPT Researcher,Open-source community,https://github.com/assafelovic/gpt-researcher,并行深度搜索与引用报告,直接试运行,P1,Web资料质量与引文复核,可做通用研究适配器
+01 端到端科研,Open Deep Research,Hugging Face,https://github.com/huggingface/smolagents/tree/main/examples/open_deep_research,开源深度研究工具链样例,直接试运行,P1,复现实验条件与检索服务可变,轻量研究基线
+01 端到端科研,STORM / Co-STORM,Stanford OVAL,https://github.com/stanford-oval/storm,多视角提问与文献综述,复用文献综合模块,P0,不应默认生成稿达到可发表水平,人机协同问答与知识结构
+02 文献检索与知识库,Asta Tools / Plugins,Ai2,https://github.com/allenai/asta-plugins,科研检索/文献库/数据分析Skills,优先集成Skills,P0,检查API额度、许可证与鉴权,2026科研Agent生态的重要入口
+02 文献检索与知识库,Asta Resources,Ai2,https://allenai.org/asta/resources,科研工具、Agent模板、科学语料接口,API / MCP,P0,规模与访问策略随服务更新,官方平台
+02 文献检索与知识库,PaperQA,FutureHouse,https://github.com/Future-House/paper-qa,来源溯源的论文问答,源码复用,P0,全文获取与版权、引用真实性,Evidence QA
+02 文献检索与知识库,OpenScholar,Ai2 / UW,https://github.com/AkariAsai/OpenScholar,检索增强科研文献综合,源码与方法复用,P0,模型/索引获取成本、许可,Nature 2026论文配套代码
+02 文献检索与知识库,ScholarQABench,OpenScholar team,https://github.com/AkariAsai/ScholarQABench,检验科研问答与引用质量,评测集成,P1,检查评测数据泄漏,应和OpenScholar成对考察
+02 文献检索与知识库,Semantic Scholar Academic Graph API,Ai2,https://api.semanticscholar.org/api-docs,论文/作者/引用图谱,API适配器,P0,限流/缺失字段/全文授权,优先作为学术元数据入口
+02 文献检索与知识库,Semantic Scholar Recommendations API,Ai2,https://api.semanticscholar.org/api-docs/recommendations,相关论文推荐,API适配器,P1,推荐偏差和相关性核查,正负论文反馈
+02 文献检索与知识库,OpenAlex API,OurResearch,https://help.openalex.org/api/,论文、机构、作者和主题图谱,API适配器,P0,接口限制/免费额度政策动态,学术元数据交叉验证
+02 文献检索与知识库,Crossref REST API,Crossref,https://www.production.crossref.org/documentation/retrieve-metadata/rest-api/,DOI校验、出版信息、撤稿/更新,API适配器,P0,不同出版社元数据质量不一致,引文核验必备
+02 文献检索与知识库,arXiv,Cornell / arXiv,https://info.arxiv.org/help/api/index.html,预印本检索与更新,API / RSS,P0,预印本非同行评审，不等于最终版本,CS主要来源
+02 文献检索与知识库,OpenReview,OpenReview,https://docs.openreview.net/,同行评审、投稿版本、评分与讨论,API适配器,P1,会议数据访问范围/隐私,研究趋势与论文争议
+02 文献检索与知识库,Zotero Web API v3,Zotero,https://www.zotero.org/support/dev/web_api/v3/start,个人文献库与引用元数据,API适配器,P0,私有库授权/OAuth,保留人工整理入口
+02 文献检索与知识库,Hugging Face Papers CLI,Hugging Face,https://huggingface.co/docs/huggingface_hub/guides/cli,每日/趋势论文发现,CLI适配器,P1,热度不等于学术质量,适合论文扫描
+02 文献检索与知识库,MinerU,OpenDataLab,https://github.com/opendatalab/MinerU,PDF科学文档结构化解析,容器化适配,P1,PDF解析误差、排版与授权,表格、公式抽取
+03 Harness / Skills / MCP,OpenAI Agents SDK,OpenAI,https://github.com/openai/openai-agents-python,模型无关Agent、工具、Guardrails与Tracing,框架候选,P0,需要自行管理任务状态、资源与sandbox,Python优先
+03 Harness / Skills / MCP,OpenAI Agents API,OpenAI,https://developers.openai.com/api/docs/guides/agents-api/overview,托管Codex harness及持久Session,托管服务候选,P1,价格、云端数据范围与厂商锁定,不同于自部署SDK
+03 Harness / Skills / MCP,Google ADK,Google,https://github.com/google/adk-python,图式工作流、多Agent委派、HITL,框架候选,P0,版本快、锁定版本测试,2026已升级2.0
+03 Harness / Skills / MCP,LangGraph,LangChain,https://docs.langchain.com/oss/python/langgraph/overview,持久执行、Checkpoints、状态与恢复,框架候选,P0,Agent抽象和运行状态复杂度,长跑科研循环
+03 Harness / Skills / MCP,Microsoft Agent Framework,Microsoft,https://github.com/microsoft/agent-framework,工作流、Agent、Harness、可观测性,框架候选,P1,框架成熟度/迁移风险,AutoGen后继
+03 Harness / Skills / MCP,OpenHands,OpenHands,https://github.com/OpenHands/OpenHands,代码Agent与自动化控制台,研发执行层候选,P0,沙箱安全、远程环境权限,可接多Agent后端
+03 Harness / Skills / MCP,smolagents,Hugging Face,https://github.com/huggingface/smolagents,轻量代码执行Agent,轻量候选,P1,执行隔离和模型兼容性,适合baseline
+03 Harness / Skills / MCP,Agent Skills specification,Agent Skills,https://agentskills.io/,跨Agent技能标准,规范借鉴,P0,执行宿主存在差异,SKILL.md结构
+03 Harness / Skills / MCP,OpenAI Plugins examples,OpenAI,https://github.com/openai/plugins,最新插件和Skill示例,复用模板,P0,逐项核对技能许可证,旧 openai/skills 已deprecated
+03 Harness / Skills / MCP,Anthropic Skills,Anthropic,https://github.com/anthropics/skills,Skill实践样例,复用模板,P0,不同技能使用条款不同,可研究插件分发
+03 Harness / Skills / MCP,Model Context Protocol,MCP Contributors,https://modelcontextprotocol.io/,Agent工具/资源/提示词标准互联,标准接口,P0,授权/数据隔离/Prompt Injection,Tool != Skill
+03 Harness / Skills / MCP,MCP Registry,MCP Contributors,https://registry.modelcontextprotocol.io/,查找MCP工具服务器,插件索引,P0,第三方服务可信度,检索后逐个审查
+03 Harness / Skills / MCP,MCP Reference Servers,MCP Contributors,https://github.com/modelcontextprotocol/servers,参考服务器实现,参考代码,P1,官方声明非生产就绪,需要加固
+03 Harness / Skills / MCP,LiteLLM,BerriAI,https://github.com/BerriAI/litellm,统一多模型API网关,模型接入层,P0,计费/日志保密/版本兼容,防止模型绑定
+04 评测与可观测性,AstaBench,Ai2,https://github.com/allenai/asta-bench,科研Agent任务综合评测,核心基准,P0,数据污染、评分主观性,2400+测试项，11 benchmark
+04 评测与可观测性,Inspect AI,UK AI Security Institute,https://inspect.aisi.org.uk/,开放Agent/LLM评测框架,核心评测框架,P0,环境隔离与评分器校准,AstaBench底座
+04 评测与可观测性,PaperBench,OpenAI,https://github.com/openai/frontier-evals/tree/main/project/paperbench,复制AI科研论文能力,专项基准,P0,GPU成本、评分标准,独立复现与分层Rubric
+04 评测与可观测性,MLE-bench,OpenAI,https://github.com/openai/mle-bench,机器学习工程任务能力,专项基准,P0,实验成本/种子/数据访问,75 Kaggle比赛
+04 评测与可观测性,ScienceAgentBench,Princeton and collaborators,https://hal.cs.princeton.edu/scienceagentbench,科学数据分析任务,专项基准,P1,公开任务变更,科学任务导向
+04 评测与可观测性,Arize Phoenix,Arize AI,https://github.com/Arize-ai/phoenix,Agent调用Trace、评测、Prompt管理,观测候选,P0,日志可能含私人和未公开研究数据,支持自托管
+04 评测与可观测性,Langfuse,Langfuse,https://github.com/langfuse/langfuse,Trace、成本、质量评估、管理,观测候选,P0,敏感prompt/数据去标识化,与Phoenix做PoC对比
+04 评测与可观测性,OpenAI Agent Evals,OpenAI,https://developers.openai.com/api/docs/guides/agent-evals,Trace grading、datasets、graders,工程最佳实践,P1,对外部平台的依赖,用于设计质量门槛
+04 评测与可观测性,Skill Evals Guide,OpenAI,https://developers.openai.com/blog/eval-skills,技能回归与效果评测,开发规范,P0,评价器与人工质量一致性,先写验收标准
+05 科研计算与复现,MLflow Tracking,MLflow,https://mlflow.org/docs/latest/tracking/,记录模型参数、指标、工件和版本,直接集成,P0,日志与存储治理,科研主台账候选
+05 科研计算与复现,DVC,Iterative,https://doc.dvc.org/user-guide,数据版本和实验管线,直接集成,P0,远程存储权限与成本,Git + 大文件
+05 科研计算与复现,Weights & Biases,W&B,https://docs.wandb.ai/,运行追踪、Artifacts、Sweeps,可替代MLflow,P1,云服务定价与数据治理,不要一开始同时上多套
+05 科研计算与复现,Hydra,Meta / community,https://hydra.cc/,结构化配置与多实验运行,集成,P1,配置复杂性,实验批量扫描
+05 科研计算与复现,Ray Tune,Anyscale / community,https://docs.ray.io/en/latest/tune/index.html,分布式搜索与优化,计算调度层候选,P1,集群环境与依赖,多GPU超参搜索
+05 科研计算与复现,Slurm,SchedMD,https://slurm.schedmd.com/documentation.html,HPC作业调度与GPU管理,适配现有集群,P0,集群管理者授权/队列规则,远程科研算力
+05 科研计算与复现,Docker,Docker,https://docs.docker.com/,容器化实验与Agent沙箱,运行隔离,P0,默认容器不是完整安全边界,镜像固定digest
+05 科研计算与复现,Apptainer,Apptainer,https://apptainer.org/docs/user/main/,适配HPC容器环境,计算集群候选,P1,集群软件与管理员设置,共享超算环境常用
+05 科研计算与复现,Zenodo,CERN / OpenAIRE,https://zenodo.org/,科研工件持久归档与DOI,可选归档,P1,公开前人工批准,论文工件留存
+05 科研计算与复现,CodeOcean / FAIR Principles,GO FAIR,https://www.go-fair.org/fair-principles/,可发现可访问可互操作可复用,数据规范,P1,指导性质而非库,科研数据元数据
+06 机构科研规范,MIT The Use of AI in Research and Scholarship,MIT,https://research.mit.edu/security-integrity-and-compliance/research-integrity/mits-guidelines-ethical-authorship-and-publication-practices/use-ai-research-and-scholarship-mit,AI使用、披露、准确性、保密,合规规则库,P0,院校规则不自动代替目标会议规则,2026年8月更新
+06 机构科研规范,Stanford AI in Academic Research,Stanford Libraries,https://guides.library.stanford.edu/ai_research/how_to_use_AI,AI研究实践和评估,方法参考,P0,学校指引并非每会议硬约束,研究方法
+06 机构科研规范,Stanford Citation Guidelines,Stanford Libraries,https://guides.library.stanford.edu/ai_research/citation_guidelines,AI披露与引用风格,写作核查,P1,期刊规则优先,不同引文制度
+06 机构科研规范,Stanford Research Rigor & Reproducibility,Stanford Medicine,https://med.stanford.edu/sporr/support/resources.html,实验室手册/复现/研究记录,方法参考,P0,根据课题适配,科研流程管理范例
+06 机构科研规范,UC Berkeley Agentic AI Guidance,UC Berkeley,https://ai.berkeley.edu/guidance/appropriate-use-generative-and-agentic-ai,数据安全、Agent工具使用,合规参考,P0,具体数据类别敏感,2026年最新指引
+06 机构科研规范,UC Berkeley Reproducible Research Guide (UC Davis DataLab),UC Davis,https://ucdavisdatalab.github.io/guide_reproducible_research/chapters/01_principles.html,研究日志/数据治理/复现,方法参考,P1,注意不是Berkeley机构,University of California系统其他校区
+06 机构科研规范,ACM Policy on Authorship 2026,ACM,https://prod-www.acm.bloomreach.cloud/publications/policies/new-acm-policy-on-authorship,科研用AI方法描述及作者责任,投稿规范,P0,投稿会议单独规则可能更严格,2026-05更新，科研过程用AI须方法披露
+06 机构科研规范,IEEE AI Generated Text Guidelines,IEEE,https://open.ieee.org/author-guidelines-for-artificial-intelligence-ai-generated-text/,AI生成内容的明确披露,投稿规范,P0,具体期刊和会议要求可能变化,代码/文字/图像范畴
+06 机构科研规范,AAAI-27 Main Track Call,AAAI,https://aaai.org/conference/aaai/aaai-27/main-technical-track-call/,AI使用、可复现性,投稿规范,P0,与AAAI-27另一个政策页面用词存在冲突，须人工核对,提交前确认版本
+06 机构科研规范,AAAI-27 Author Policies,AAAI,https://aaai.org/conference/aaai/aaai-27/policies-for-aaai-27-authors/,LLM生成文本规则,投稿规范,P0,和AAAI主技术Track Call存在表面冲突，严禁自行取宽松解释,需向会议方确认
+06 机构科研规范,NeurIPS 2026 Main Track Handbook,NeurIPS,https://nips.cc/Conferences/2026/MainTrackHandbook,LLM研究方法、Checklist、伦理,投稿规范,P0,2027要重新核对,预防数据泄漏
+06 机构科研规范,CCF科研行为与学术道德规范2026,CCF,https://www.ccf.org.cn/About_CCF/CCF_Constitution/2026-07-16/915412.shtml,人主导科研思想、AI声明、真实数据,投稿规范,P0,需区分适用对象和不同会场,2026年6月27日通过
+06 机构科研规范,Publisher AI Policy Index,CMU Libraries,https://guides.library.cmu.edu/publishing/AI,出版社AI使用规则导航,合规索引,P1,索引不能代替主办方原文,多Publisher入口
+07 公司与个人工程经验,Building Effective Agents,Anthropic,https://www.anthropic.com/research/building-effective-agents,工作流与Agent基本模式,架构方法,P0,模式适用性需要本地评测,避免过度多Agent
+07 公司与个人工程经验,Effective Harnesses for Long-Running Agents,Anthropic,https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents,跨会话初始化、进度文件、恢复,Harness方法,P0,长任务状态丢失,核心必读
+07 公司与个人工程经验,Multi-Agent Research System Engineering,Anthropic,https://www.anthropic.com/engineering/multi-agent-research-system,研究Agent并行与质量控制,架构方法,P0,来源偏差、并行成本,核心必读
+07 公司与个人工程经验,Effective Context Engineering for AI Agents,Anthropic,https://www.anthropic.com/research/effective-context-engineering-for-ai-agents,上下文管理与工具信息选择,记忆/上下文设计,P0,摘要损失重要状态,与Agent压缩研究相连
+07 公司与个人工程经验,Demystifying Evals for AI Agents,Anthropic,https://www.anthropic.com/research/demystifying-evals-for-ai-agents,多轮评测/Outcome/Trace/人工校准,测试原则,P0,LLM评审标准漂移,2026工程最佳实践
+07 公司与个人工程经验,Hamel Husain Eval FAQ,Hamel Husain & Shreya Shankar,https://hamel.dev/blog/posts/evals-faq/,失败分析与人类标注指南,实践经验,P0,经验指南非标准规范,错误分类非常实用
+07 公司与个人工程经验,Hamel Agentic Workflow Evals,Hamel Husain & Shreya Shankar,https://hamel.dev/blog/posts/evals-faq/how-do-i-evaluate-agentic-workflows.html,先终态再逐步诊断,实践经验,P1,前期先收集足够轨迹,防止只优化过程不优化结果
+07 公司与个人工程经验,Karpathy autoresearch program.md,Andrej Karpathy,https://github.com/karpathy/autoresearch/blob/master/program.md,个人开发者可执行实验指令,技能模板,P0,严禁裸奔无上限耗费；正式项目需预算限制,最小可理解实验循环
+07 公司与个人工程经验,OpenAI Deep Research System Card,OpenAI,https://openai.com/index/deep-research-system-card/,提示注入、幻觉、隐私评估,安全参考,P1,特定产品系统卡不等于所有Research Agent,检索需要事实核验
+06 机构科研规范,Harvard Kempner Agentic AI in Research,Harvard Kempner Institute,https://handbook.eng.kempnerinstitute.harvard.edu/s5b_agentic_ai_workflows/agentic_ai_in_research.html,科研Agent实验实践、权限与人工控制,方法参考,P0,不可视作投稿期刊的唯一规范,专门面向科研人员的Agentic AI资料
+06 机构科研规范,Designing Reproducible LLM-Assisted Scientific Analyses,Patterns (2026),https://pmc.ncbi.nlm.nih.gov/articles/PMC13576654/,LLM处于数据路径内/外、科研可复现性,科研方法论,P0,需保留模型版本、工具链、确定性测试,DOI:10.1016/j.patter.2026.101644
+07 公司与个人工程经验,Lilian Weng Harness Engineering for Self-Improvement,Lilian Weng,https://lilianweng.github.io/posts/2026-07-04-harness/,Harness工程与自我改进Agent,深入研读,P0,落地需实测其适用范围,2026-07工程文章
+07 公司与个人工程经验,Lilian Weng LLM-Powered Autonomous Agents,Lilian Weng,https://lilianweng.github.io/posts/2023-06-23-agent/,规划、记忆、工具调用的系统综述,知识背景,P1,较早文章需结合近年实务更新,经典Agent研究长文
+07 公司与个人工程经验,Karpathy No Priors Interview on AutoResearch,No Priors / Andrej Karpathy,https://www.youtube.com/watch?v=kwSVtQ7dziU,开发者访谈：自动科研与研究工程,访谈素材,P1,访谈意见≠可复现验证,2026年访谈
+07 公司与个人工程经验,Simon Willison Agentic Engineering Patterns,Simon Willison,https://simonwillison.net/guides/agentic-engineering-patterns/,Git、测试驱动、Agent工作方式、错误模式,工程手册,P0,按研发环境裁剪,个人工程师公开经验
+07 公司与个人工程经验,Simon Willison First Run the Tests,Simon Willison,https://simonwillison.net/guides/agentic-engineering-patterns/first-run-the-tests/,Agent开始前先验证原测试、再增量迭代,工程工作流实践,P0,仅有测试通过不等同科学结论可靠,Agentic Engineering Patterns子章节
+01 端到端科研,Awesome Research Agents,Community / Chris Liu,https://github.com/chrisliu298/awesome-research-agents,自动科研系统与论文索引,二级资源索引,P1,聚合索引需要逐项核验,持续发现新项目
+03 Harness / Skills / MCP,Awesome Code-as-Agent Harness Papers,Community,https://github.com/YennNing/Awesome-Code-as-Agent-Harness-Papers,Harness相关论文和代码集,二级资源索引,P1,非官方完整性保证,关注Harness机制研究
+01 端到端科研,AI for Auto-Research: A Survey,Research community,https://worldbench.github.io/assets_common/papers/survey-ai-auto-research.pdf,自动科研现有机制与评测综述,文献地图,P0,综述观点须回查一手论文,跨科学领域自动科研全景
+01 端到端科研,Stanford Biomni,Stanford SNAP,https://github.com/snap-stanford/Biomni,科学领域工具环境+生物医学AI Agent,领域插件生态参考,P0,默认LLM代码可有完整系统权限，必须沙箱；集成数据库单独审许可,Apache 2.0但依赖另行核对
+05 科研计算与复现,Snakemake,Scientific workflow community,https://snakemake.readthedocs.io/en/stable/,确定性可复验DAG分析流水线,工作流后端候选,P0,业务规则需适配，可能与其他workflow引擎重叠,优先让LLM离开正式评测的数据路径
+05 科研计算与复现,Parsl,University of Chicago / Argonne / UIUC,https://github.com/Parsl/parsl,HPC/云端Python并行作业,计算后端候选,P1,调度环境支持和共享集群权限核查,并行科研作业
+05 科研计算与复现,Open Science Framework API,Center for Open Science,https://developer.osf.io/,开放科学项目、文件、预注册与元数据管理,成果归档适配器,P1,上传公开前人工审查,开放研究资料归档
+05 科研计算与复现,Harvard Kempner HPC Agentic Recipes,Harvard Kempner Institute,https://github.com/KempnerInstitute/hpc-agentic-recipes,HPC本地模型+SLURM+研究Agent实践,集群部署参考,P0,具体环境与学校规定不可直接移植,算力侧Agent集成实用案例
+07 公司与个人工程经验,Harvard Kempner SLURM Jobs and Cluster Workflows,Harvard Kempner Institute,https://handbook.eng.kempnerinstitute.harvard.edu/s5b_agentic_ai_workflows/slurm_jobs_and_cluster_workflows.html,Agent只读状态查询和需审批提交任务的权限分离,HPC权限架构方法,P0,每个共享集群需遵守管理政策,强烈推荐将其适用于自动科研GPU任务
+03 Harness / Skills / MCP,Orchestra AI-Research-SKILLs,Orchestra Research,https://github.com/Orchestra-Research/AI-Research-SKILLs,98研究Skills：autoresearch、ideation、ML训练、GPU系统、论文、评测,优先挑选接入（不要自动全安装）,P0,大量第三方脚本和依赖必须逐项审查；Skill内容要实测,MIT许可证，23大类，优先适用于AI研究
+01 端到端科研,ARIS Adversarial Multi-Agent Research,Research community,https://arxiv.org/abs/2605.03042,对抗多Agent研究、主张审计与修订,论文机制参考,P1,论文方法不代表已完成可运行源码核验,研究质量批判机制

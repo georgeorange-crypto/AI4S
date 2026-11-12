@@ -1,0 +1,27 @@
+schema_version: '1'
+contract_id: example-cpu-experiment
+project_id: example-ai-systems
+hypothesis_id: hypothesis-demo
+intent: exploratory
+question: Is the candidate better than a simple baseline on held-out data?
+dataset:
+  id: offline-fixture-v1
+  sha256: set-at-runtime
+  splits: [train, validation, test]
+metrics:
+  - { name: heldout_accuracy, direction: maximize }
+  - { name: runtime_s, direction: minimize }
+seed_list: [11, 23, 37]
+baseline:
+  ref: examples/offline_research/baseline.py
+candidate:
+  ref: examples/offline_research/candidate.py
+execution:
+  executor: local-sandbox
+  cpu_cores: 2
+  memory_gb: 4
+  max_runtime_seconds: 600
+  allow_network: false
+approval:
+  required_before_remote_execution: true
+  human_publication_required: true

@@ -1,0 +1,25 @@
+schema_version: '1'
+id: semantic-scholar-paper-search
+name: Search academic paper metadata
+source_url: https://api.semanticscholar.org/api-docs
+tool_type: external-api
+version: unverified
+integration_status: discovered
+license_status: review-required
+input_schema_ref: schemas/semantic-scholar-paper-search.input.json
+output_schema_ref: schemas/semantic-scholar-paper-search.output.json
+permissions:
+  network_access: required
+  network_hosts_allowlist: [api.semanticscholar.org]
+  filesystem_access: none
+  can_write_external_data: false
+execution:
+  timeout_seconds: 15
+  retries: 2
+  rate_limit: verify-from-official-policy
+secrets:
+  - optional_semantic_scholar_api_key
+security:
+  untrusted_output: true
+  sandboxed: true
+  approval_to_enable: true

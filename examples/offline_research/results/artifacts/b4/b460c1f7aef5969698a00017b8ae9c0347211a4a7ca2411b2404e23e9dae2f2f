@@ -1,0 +1,126 @@
+{
+  "approval": {
+    "action": "local_cpu_experiment",
+    "actor": "codex-user-instruction",
+    "created_at": "2026-11-12T21:06:34.536471+00:00",
+    "decision": "approved",
+    "id": "896b6835-27d9-4717-b1e7-fcd9756ee67a",
+    "scope": "offline fixture; zero spend; no network"
+  },
+  "budget": {
+    "max_runs": 3,
+    "spend_usd": 0.0,
+    "wall_seconds": 30
+  },
+  "claims": [
+    {
+      "content": "Fixture labels are generated from x1 + x2 > 0.",
+      "id": "claim-supported",
+      "source": "offline_fixture.csv",
+      "status": "supported"
+    },
+    {
+      "content": "The candidate uses both x1 and x2.",
+      "excluded_from_conclusion": true,
+      "id": "claim-conflicting",
+      "source": "fixture_notes_untrusted.txt",
+      "status": "disputed"
+    }
+  ],
+  "code_sha256": "8ff01e4b500675c84b6745e6c1aba94532266e5448c7c0894b380b3d0b14d2e4",
+  "config_sha256": "9df9f56a5a84bf0374bb2da6ac8fa151f3c8eabdbd86edc0208b943b668715fe",
+  "contract_sha256": "9df9f56a5a84bf0374bb2da6ac8fa151f3c8eabdbd86edc0208b943b668715fe",
+  "dataset_id": "synthetic-linear-fixture-v1",
+  "dataset_sha256": "4d18f52435537c0c830f5867ffda4af31c4e7f62ebe9fb41d4fa4ac9d412f85f",
+  "experiment_ended_at": "2026-11-12T21:06:34.978537+00:00",
+  "experiment_started_at": "2026-11-12T21:06:34.972181+00:00",
+  "hypothesis": "A one-feature threshold may improve held-out accuracy over the majority baseline, though labels depend on both features.",
+  "intent": "exploratory",
+  "interpretation": "exploratory_signal",
+  "mean_candidate_minus_baseline_accuracy": 0.20000000000000004,
+  "model": null,
+  "question": "Does x1-only classification match a simple majority baseline on held-out synthetic labels?",
+  "runs": [
+    {
+      "elapsed_seconds": 0.0,
+      "ended_at": "2026-11-12T21:06:34.972181+00:00",
+      "error": null,
+      "metrics": {
+        "baseline": {
+          "heldout_accuracy": 0.2,
+          "test_examples": 5.0
+        },
+        "candidate": {
+          "heldout_accuracy": 0.4,
+          "test_examples": 5.0
+        },
+        "difference": 0.2,
+        "seed": 11
+      },
+      "seed": 11,
+      "started_at": "2026-11-12T21:06:34.972181+00:00",
+      "status": "completed"
+    },
+    {
+      "elapsed_seconds": 0.0,
+      "ended_at": "2026-11-12T21:06:34.974193+00:00",
+      "error": null,
+      "metrics": {
+        "baseline": {
+          "heldout_accuracy": 0.6,
+          "test_examples": 5.0
+        },
+        "candidate": {
+          "heldout_accuracy": 0.6,
+          "test_examples": 5.0
+        },
+        "difference": 0.0,
+        "seed": 23
+      },
+      "seed": 23,
+      "started_at": "2026-11-12T21:06:34.974193+00:00",
+      "status": "completed"
+    },
+    {
+      "elapsed_seconds": 0.0,
+      "ended_at": "2026-11-12T21:06:34.977283+00:00",
+      "error": null,
+      "metrics": {
+        "baseline": {
+          "heldout_accuracy": 0.4,
+          "test_examples": 5.0
+        },
+        "candidate": {
+          "heldout_accuracy": 0.8,
+          "test_examples": 5.0
+        },
+        "difference": 0.4,
+        "seed": 37
+      },
+      "seed": 37,
+      "started_at": "2026-11-12T21:06:34.977283+00:00",
+      "status": "completed"
+    }
+  ],
+  "runtime": {
+    "dependency_lock_sha256": "5ccf9f8d8d0a2536ebce1da738563f909b7560e77377a630ea90667989df1559",
+    "hardware": {
+      "accelerator": null,
+      "architecture": "AMD64",
+      "cpu_model": "AMD64 Family 25 Model 97 Stepping 2, AuthenticAMD"
+    },
+    "platform": "Windows-11-10.0.26300-SP0",
+    "python": "3.12.7"
+  },
+  "seeds": [
+    11,
+    23,
+    37
+  ],
+  "status": "completed",
+  "tool_versions": {
+    "ai4s_research_os": "0.1.0",
+    "python": "3.12.7"
+  },
+  "workflow_id": "a91caca4-b37a-45f8-8e7f-51d931014db9"
+}

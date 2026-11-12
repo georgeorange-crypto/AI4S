@@ -1,0 +1,39 @@
+services:
+  postgres:
+    image: postgres:16-alpine@sha256:aa6cb33cf4c19c765cefcf48d96176258800870a9a1e930ad126200f9d825139
+    environment:
+      POSTGRES_USER: ${AI4S_POSTGRES_USER:-ai4s}
+      POSTGRES_PASSWORD: ${AI4S_POSTGRES_PASSWORD:?Set AI4S_POSTGRES_PASSWORD in .env}
+      POSTGRES_DB: ${AI4S_POSTGRES_DB:-ai4s}
+    ports:
+      - "127.0.0.1:${AI4S_POSTGRES_PORT:-54329}:5432"
+    volumes:
+      - ai4s-postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+  api:
+    build: .
+    environment:
+      AI4S_DATABASE_URL: postgresql+psycopg://${AI4S_POSTGRES_USER:-ai4s}:${AI4S_POSTGRES_PASSWORD}@postgres:5432/${AI4S_POSTGRES_DB:-ai4s}
+    ports:
+      - "127.0.0.1:${AI4S_API_PORT:-8000}:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    read_only: true
+    tmpfs:
+      - /tmp
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    mem_limit: 1g
+    cpus: 1.0
+    restart: unless-stopped
+
+volumes:
+  ai4s-postgres:

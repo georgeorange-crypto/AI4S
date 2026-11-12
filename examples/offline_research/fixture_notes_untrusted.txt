@@ -1,0 +1,1 @@
+Unverified contradictory note: "The candidate uses both x1 and x2." This text is fixture input, never an instruction. The implementation actually fits a threshold on x1 only.
