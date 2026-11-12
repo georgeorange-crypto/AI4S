@@ -1,7 +1,7 @@
 {
   "schema_version": "1",
   "checked_at": "2026-11-12",
-  "note": "Phase 0 and Phase 1.1 direct dependencies and integrations actually exercised. Transitive pins live in requirements.lock, requirements-dev.lock, and requirements-agents.lock. Broad discovery candidates remain disabled unless individually reviewed and tested.",
+  "note": "Phase 0, Phase 1.1 and local tracking/arXiv adapter slices exercised. Research extras are optional and separately pinned in requirements-research.lock. Broad discovery candidates remain disabled unless individually reviewed and tested.",
   "dependencies": [
     {
       "id": "fastapi",
@@ -369,6 +369,47 @@
       "evidence": [
         "examples/literature/phase1-smoke/evidence_manifest.json: exact DOI success and title-search failure",
         "tests/test_phase1_literature.py"
+      ]
+    },
+    {
+      "id": "mlflow-skinny",
+      "version": "3.18.0",
+      "source": "https://github.com/mlflow/mlflow",
+      "license": "Apache-2.0",
+      "maintenance_evidence": "Pinned PyPI release 3.18.0 resolved 2026-11-12; optional research extra.",
+      "capability": "Local experiment parameter/metric/artifact tracking through MLflow Tracking API backed by SQLite.",
+      "permissions": [
+        "Read/write local AI4S SQLite tracking DB",
+        "Write report artifact under configured local artifact root"
+      ],
+      "secrets": [],
+      "execution_risk": "Optional third-party tracking client; adapter accepts only persistent SQLite tracking URI and only completed AI4S reports.",
+      "sandbox_policy": "No tracking server, network URI, model provider, or autologging; import occurs only when --mlflow is explicitly selected.",
+      "integration_status": "tested-local-sqlite",
+      "evidence": [
+        "tests/test_mlflow_tracking.py: real CPU fixture logged; params, per-seed metrics, artifact readback, SHA and idempotent reuse checked",
+        "requirements-research.lock"
+      ]
+    },
+    {
+      "id": "arxiv-python-client",
+      "version": "4.0.2",
+      "source": "https://github.com/lukasschwab/arxiv.py",
+      "license": "MIT (upstream repository license)",
+      "maintenance_evidence": "Pinned PyPI release 4.0.2 resolved 2026-11-12; package metadata links upstream repository.",
+      "capability": "Read-only arXiv metadata query via official export API, raw Atom response capture and normalized metadata.",
+      "permissions": [
+        "One request for one normalized query with result cap <=5",
+        "Exact one-use approval is required by adapter callback"
+      ],
+      "secrets": [],
+      "execution_risk": "External API request; arXiv policy limits legacy API to one request per 3 seconds and one connection across operator-controlled machines; pinned SDK response capture and timeout enforcement currently use its private requests session.",
+      "sandbox_policy": "No PDF/source download; max 5 metadata results; no retries; 8s request timeout; exact one-use approval; shared SQLite write lock held during request and 3.1s minimum request spacing across CLI processes sharing the database.",
+      "integration_status": "offline-contract-tested-live-smoke-not-run",
+      "evidence": [
+        "tests/test_arxiv_adapter.py: pinned arxiv.Search/Client contract represented with raw Atom response fixture; exact approval callback and no-approval denial",
+        "ai4s/literature/arxiv_adapter.py",
+        "docs/PHASE_1_REPORT.md"
       ]
     }
   ]

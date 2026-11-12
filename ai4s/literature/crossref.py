@@ -11,7 +11,8 @@ import time
 import urllib.error
 import urllib.parse
 import urllib.request
-from collections.abc import Callable, Mapping
+from collections.abc import Callable, Iterator, Mapping
+from contextlib import contextmanager
 from datetime import datetime, timezone
 from typing import Any, Protocol
 
@@ -72,6 +73,30 @@ class SQLiteRateLimiter:
                     (self.bucket, now_seconds),
                 )
                 self.connection.commit()
+                return
+            self.connection.rollback()
+            time.sleep(delay)
+
+    @contextmanager
+    def slot(self) -> Iterator[None]:
+        """Hold SQLite's cross-process write lock for one spaced network request."""
+        while True:
+            self.connection.execute("BEGIN IMMEDIATE")
+            row = self.connection.execute(
+                "SELECT last_started FROM network_rate_limits WHERE bucket=?", (self.bucket,)
+            ).fetchone()
+            now_seconds = time.time()
+            delay = self.interval_seconds - (now_seconds - float(row[0])) if row else 0.0
+            if delay <= 0:
+                self.connection.execute(
+                    "INSERT INTO network_rate_limits(bucket,last_started) VALUES(?,?) "
+                    "ON CONFLICT(bucket) DO UPDATE SET last_started=excluded.last_started",
+                    (self.bucket, now_seconds),
+                )
+                try:
+                    yield
+                finally:
+                    self.connection.commit()
                 return
             self.connection.rollback()
             time.sleep(delay)

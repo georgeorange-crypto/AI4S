@@ -1,6 +1,6 @@
 # AI4S Research OS — Architecture & Codex Development Blueprint
 
-**状态：Phase 0 离线内核已实现；Phase 1.1 文献工具/图工作流已实测；完整 Phase 1 尚未验收**
+**状态：Phase 0 离线内核已实现；Phase 1.1 文献图工作流、Phase 1.2 MLflow/arXiv 工具适配已分别测试；完整 Phase 1 尚未验收**
 **日期：2026-11-12**
 **方向：Computer Science / Artificial Intelligence / Machine Learning / AI Systems / Agents / GPU Systems**
 
@@ -31,6 +31,26 @@ CLI 会运行固定 CSV fixture 上的多数类 baseline 与 x1 阈值候选算�
 可使用 `run-offline --pause-after-seed 11` 暂停，再使用 `resume --approval-id <approval-id>` 恢复；`--run-key` 可指定 workflow 的幂等键。必须先由显式 `approve-local` 命令写入本地 approval 记录；失败记录和被争议证据会保留。此批准仅表示本地用户允许该零花费 fixture 实验，不构成远程/发布权限。
 
 资源导入保留 100 项资源记录、43 项发现索引记录和原始字段；按规范 URL 计算实际去重。第三方资源仍为 `discovered`，未知许可证和未审查执行风险默认禁止启用。
+
+### Optional research integrations: MLflow and arXiv
+
+Install the separately pinned integrations with `python -m pip install -r requirements-research.lock` (or `pip install -e ".[research]"`). MLflow is opt-in per completed CPU run and writes only to a local SQLite store:
+
+```powershell
+.\.venv\Scripts\python.exe -m pip install -r requirements-research.lock
+.\.venv\Scripts\python.exe -m ai4s.cli run-offline --db .ai4s/research.sqlite --out .ai4s/runs --approval-id <approval-id> --mlflow --mlflow-db .ai4s/mlflow.db
+```
+
+The MLflow adapter logs parameters, per-seed metrics and a hashed JSON report artifact, and rejects remote tracking URIs. The arXiv adapter uses the pinned `arxiv.py` client for metadata-only search, with bounded query/results and preserved raw-feed SHA-256. Its offline SDK contract is tested; a live arXiv request has not been smoke-tested and remains unavailable by default pending an exact stored approval.
+
+### Phase 1.2：本地实验追踪与 arXiv 元数据工具
+
+研究集成作为可选依赖安装：`pip install -r requirements-research.lock`。MLflow 只在显式 `--mlflow` 时对已完成 CPU workflow 写入本机 SQLite。arXiv 查询使用 exact-query one-use approval CLI，并将原始 Atom feed 作为哈希工件保存；本地 adapter/CLI 可离线验证，但联网 smoke 尚未执行。细节和限制见 [`docs/PHASE_1_REPORT.md`](docs/PHASE_1_REPORT.md)。
+
+```powershell
+.\.venv\Scripts\python.exe -m ai4s.cli approve-arxiv --db .ai4s/research.sqlite --query "all:graph workflow" --max-results 3 --actor <your-name>
+.\.venv\Scripts\python.exe -m ai4s.cli search-arxiv --db .ai4s/research.sqlite --query "all:graph workflow" --max-results 3 --approval-id <approval-id> --out .ai4s/arxiv
+```
 
 ### Phase 1.1：模型关闭的文献工具与图工作流
 

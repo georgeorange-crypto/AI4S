@@ -51,7 +51,7 @@ The title-search smoke surfaced three same-title posted-content records unrelate
 
 ## 6. Not implemented
 
-Semantic Scholar, arXiv, OpenAlex; remote MCP servers/transports; model provider gateway; model-generated literature synthesis/hypotheses/idea selection; full-text passage evidence; graph-node pause/cancel; OpenHands or another code sandbox; literature-to-approved-experiment-to-CPU-run handoff; and UI. Full Phase 1 acceptance remains open.
+Semantic Scholar and OpenAlex; arXiv graph/MCP integration and live provider smoke; remote MCP servers/transports; model provider gateway; model-generated literature synthesis/hypotheses/idea selection; full-text passage evidence; graph-node pause/cancel; OpenHands or another code sandbox; literature-to-approved-experiment-to-CPU-run handoff; and UI. Full Phase 1 acceptance remains open.
 
 ## 7. Next actions
 
@@ -59,3 +59,66 @@ Semantic Scholar, arXiv, OpenAlex; remote MCP servers/transports; model provider
 2. Add evidence intake → human-reviewed hypothesis → approved experiment contract → existing P0 CPU runner, without enabling a model.
 3. Integrate one more official paper API only after an independent source/license/permission/contract/smoke audit.
 4. Add graph-level pause/cancel after defining interruption and approval semantics.
+
+---
+
+# Phase 1.2 report — local MLflow + arXiv tool slice (2026-11-12)
+
+**Acceptance: MLflow local Tracking adapter accepted by offline CPU contract and CLI run. arXiv adapter/CLI has offline contract coverage but no live provider smoke; arXiv is not yet accepted as a live provider integration. Phase 1 overall remains open.** Models remain disabled.
+
+## 1. Implemented
+
+- `ai4s/tracking/mlflow_local.py`: optional MLflow client adapter; persistent SQLite URI only, completed reports only, workflow-id idempotency, run parameters, seed metrics, JSON artifact checksum/readback, mismatch refusal. MLflow import is lazy and tracking is opt-in via `--mlflow`.
+- `ai4s/literature/arxiv_adapter.py`: pinned `arxiv.py` Client/Search interface; one bounded metadata query (1–5 results), one captured raw Atom response, normalized bibliographic fields, no PDF/source download, mandatory exact-scope approval consumer, and 8-second request timeout. CLI holds a shared SQLite write lock throughout each request and spaces starts by 3.1 seconds, preventing concurrent API connections across processes that share the research DB.
+- `ai4s/cli.py`: `approve-arxiv` and `search-arxiv`; query hash/result cap approval is consumed once before egress. Raw Atom bytes are saved as a content-addressed artifact plus a JSON metadata receipt.
+- `pyproject.toml`, `requirements-research.lock`: optional and separately pinned integrations, not added to the API/runtime base image.
+- `registries/runtime_dependency_audit.json`: actual status and runtime risks recorded. arXiv is explicitly marked `offline-contract-tested-live-smoke-not-run`.
+
+## 2. Reused
+
+| Project/API | Interface | Verified status |
+|---|---|---|
+| MLflow `mlflow-skinny==3.18.0`, Apache-2.0 | `mlflow.tracking.MlflowClient`; local SQLite tracking store and artifact API | Real fixture workflow logged and read back; idempotent second call verified. No tracking server or remote URI. |
+| `arxiv==4.0.2`, upstream MIT | `arxiv.Client.results(arxiv.Search(...))`; requests response hook captures original Atom bytes | Installed pinned SDK and introspected actual client/session/Search signatures; offline contract with a raw Atom fixture passes. No live API request made. |
+| SQLite, already part of AI4S | Reused `network_rate_limits` table through `SQLiteRateLimiter` | CLI uses the `arxiv` bucket, a held cross-process lock during the request, and 3.1-second start spacing. Contract test verifies another DB connection cannot acquire a write slot until the request releases it. |
+
+Sources reviewed: [arxiv.py PyPI release](https://pypi.org/project/arxiv/4.0.2/), [arxiv.py upstream releases](https://github.com/lukasschwab/arxiv.py/releases), [arXiv API terms and rate limit](https://info.arxiv.org/help/api/tou.html), [MLflow Tracking](https://mlflow.org/docs/latest/tracking/), [MLflow Tracking API](https://mlflow.org/docs/latest/tracking/tracking-api/), [mlflow-skinny PyPI](https://pypi.org/project/mlflow-skinny/3.18.0/). arXiv terms require one connection and no more than one API request every three seconds across systems under the operator's control. The API feed can include abstract text supplied by arXiv; the adapter does not download PDFs, source files, or full text.
+
+## 3. Tests and real commands
+
+- Focused contract: `.venv\Scripts\python.exe -m pytest tests/test_mlflow_tracking.py tests/test_arxiv_adapter.py -q` — **9 passed**.
+- Full offline suite after integration: `.venv\Scripts\python.exe -m pytest -q` — **28 passed** (one upstream SQLAlchemy deprecation warning from MLflow 3.18.0).
+- Ruff check: `.venv\Scripts\ruff.exe check ai4s tests` — passed.
+- Ruff format check: `.venv\Scripts\ruff.exe format --check ai4s tests` — passed after formatting.
+- Dependency health: `.venv\Scripts\python.exe -m pip check` — no broken requirements.
+- Pinned arXiv interface inspection verified actual `Client._session` response hooks, `Client.results(search, offset=0)`, and the `Search` signature. This is interface evidence, not an API smoke.
+- Actual local end-to-end command: explicit `approve-local`, then `run-offline --run-key phase1-2-mlflow --mlflow --mlflow-db .ai4s/phase1.2/mlflow.db`. MLflow SQLite row status was `FINISHED`; report artifact SHA matched the local MLflow artifact.
+
+## 4. CPU experiment artifact
+
+- Question: does an x1-only threshold improve over majority baseline on the checked-in synthetic held-out fixture?
+- Seeds: 11, 23, 37; 5 held-out examples per seed.
+- Baseline accuracy: 0.2, 0.6, 0.4. Candidate: 0.4, 0.6, 0.8. Per-seed deltas: +0.2, 0.0, +0.4; mean delta +0.2. This small synthetic fixture supports only an exploratory signal, not a generalization or benchmark claim.
+- Code SHA-256 (recursive `ai4s/**/*.py`): `b6877f0fd25f50c7cf963ab4aff8ad72f2eeba873d005a219b53b803b8025f87`; dataset SHA-256: `4d18f52435537c0c830f5867ffda4af31c4e7f62ebe9fb41d4fa4ac9d412f85f`; contract/config SHA-256: `9df9f56a5a84bf0374bb2da6ac8fa151f3c8eabdbd86edc0208b943b668715fe`.
+- Ignored local report: `.ai4s/phase1.2/runs-final-lock/research_report.json`; raw results artifact SHA-256 `ffa8f2346f7990705a938980999c1b2b2561e5b79768f8d155677b0de8fa3a60`.
+- MLflow run `523623540d024ff8bbeef0e837ff191b`, status `FINISHED`; report artifact SHA-256 `155485cabaf055d05d10d3d0f67906702c74f4d55ee6d0405f6c0b7467c90007`; CLI receipt artifact SHA-256 `25669d0be8a4b1180c7bf85b87da4fa135c5674d08fa30c04656528864a821a1`. A repeat CLI execution returned the same MLflow run id and artifact SHA with `reused: true`.
+
+## 5. Security and provenance
+
+- arXiv CLI does not request until the exact normalized query and result cap have an unused persisted approval; missing approval is rejected before network access and failures are recorded. The query is capped at 256 characters, results at five, SDK retries disabled, request timeout is 8 seconds, and the shared SQLite bucket enforces both single-connection serialization and 3.1-second request spacing. Raw response bytes are SHA-256-addressed.
+- The adapter currently accesses the pinned SDK's private `_session` to install a raw-response hook. Version pin and offline contract protect this assumption; an upstream SDK change fails closed.
+- MLflow remote tracking URIs, unfinished workflows, and same-workflow runs with missing/conflicting report artifacts are rejected. No autologging, remote server, model calls, or paid service.
+- The live arXiv provider was not called. No arXiv record, paper citation, or successful network integration is claimed.
+
+## 6. Not implemented / remaining acceptance gates
+
+- arXiv is an approved direct CLI tool, not yet routed through the LangGraph/MCP literature workflow or stored as a literature-graph source/evidence edge.
+- No arXiv live smoke because no exact human approval for a bounded live query was supplied in this work. No live rate-limit test was performed.
+- OpenAlex/Semantic Scholar, full-text evidence passages, model providers, human-reviewed hypothesis → approved contract → CPU experiment handoff, and graph pause/cancel remain open.
+- MLflow emits one upstream `SADeprecationWarning` inside its SQLAlchemy store. It does not fail tests but needs upstream resolution/version monitoring.
+
+## 7. Next actions
+
+1. After an exact arXiv query approval, run one metadata-only request and preserve raw feed/approval/artifact checksums as live smoke evidence.
+2. Route arXiv through the existing MCP/LangGraph tool contract and source/evidence storage; record preprint status explicitly.
+3. Add human-reviewed hypothesis and experiment-contract handoff while keeping model generation disabled unless separately selected.

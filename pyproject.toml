@@ -28,6 +28,10 @@ agents = [
   "mcp==2.3.0",
   "PyYAML==6.0.3",
 ]
+research = [
+  "arxiv==4.0.2",
+  "mlflow-skinny==3.18.0",
+]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

@@ -73,12 +73,19 @@ def run_research(
         raise PermissionError("local experiment requires an approval record")
     package_root = Path(__file__).parent
     code_material = b"".join(
-        path.name.encode() + b"\0" + path.read_bytes() for path in sorted(package_root.glob("*.py"))
+        path.relative_to(package_root).as_posix().encode() + b"\0" + path.read_bytes()
+        for path in sorted(package_root.rglob("*.py"))
     )
     code_sha = digest(code_material)
     workflow_key = f"{run_key}:{contract.sha256()}:{code_sha}"
     wid, created = store.create_workflow(workflow_key, budget)
     if not created and store.state(wid) == "completed":
+        saved = store.db.execute(
+            "SELECT id FROM artifacts WHERE workflow_id=? AND name='research_report.json' ORDER BY rowid DESC LIMIT 1",
+            (wid,),
+        ).fetchone()
+        if saved:
+            return json.loads(store.get_artifact(saved["id"]))
         return summarize(store, wid, contract, reused=True)
     if store.state(wid) in {"queued", "paused", "failed"}:
         store.transition(wid, "running", {"contract_sha256": contract.sha256(), "code_sha256": code_sha})
